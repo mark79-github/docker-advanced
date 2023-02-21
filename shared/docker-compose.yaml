@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+    web:
+        image: mark79/web:demo
+        deploy:
+            replicas: 3
+        ports:
+            - 8080:80
+        volumes:
+            - "/home/vagrant/bgapp/web:/var/www/html:ro"
+        networks:
+            - app-network
+        depends_on:
+            - db
+    db:
+        image: mark79/db:demo
+        environment:
+            MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db-root-password
+        networks:
+            - app-network
+        secrets:
+            - db-root-password
+secrets:
+    db-root-password:
+        external: true
+networks:
+    app-network:
